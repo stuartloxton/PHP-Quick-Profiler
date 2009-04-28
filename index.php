@@ -15,7 +15,7 @@
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-require_once('classes/PhpQuickProfiler.php');
+require_once('pqp/classes/PhpQuickProfiler.php');
 //require_once('classes/MySqlDatabase.php');
 
 class PQPExample {
@@ -24,7 +24,7 @@ class PQPExample {
 	private $db = '';
 	
 	public function __construct() {
-		$this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime());
+		$this->profiler = new PhpQuickProfiler(PhpQuickProfiler::getMicroTime(), '/PHP-Quick-Profiler/pqp/');
 	}
 	
 	public function init() {
