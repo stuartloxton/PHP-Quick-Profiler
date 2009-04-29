@@ -30,11 +30,38 @@ function displayPqp($output, $config) {
 	var PQP_HEIGHT = "short";
 	
 	addEvent(window, 'load', loadCSS);
+	
+	function createCookie(name,value,days) {
+		if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			var expires = "; expires="+date.toGMTString();
+		}
+		else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=/";
+	}
 
+	function readCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0;i < ca.length;i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+	}
+
+	function eraseCookie(name) {
+		createCookie(name,"",-1);
+	}
+	
+	
 	function changeTab(tab) {
 		var pQp = document.getElementById('pQp');
 		hideAllTabs();
 		addClassName(pQp, tab, true);
+		createCookie('pqp-tab', tab);
 	}
 	
 	function hideAllTabs() {
@@ -52,10 +79,12 @@ function displayPqp($output, $config) {
 		if(PQP_DETAILS){
 			addClassName(container, 'hideDetails', true);
 			PQP_DETAILS = false;
+			createCookie('pqp-details', false);
 		}
 		else{
 			removeClassName(container, 'hideDetails');
 			PQP_DETAILS = true;
+			createCookie('pqp-details', true);
 		}
 	}
 	function toggleHeight(){
@@ -78,6 +107,12 @@ function displayPqp($output, $config) {
 		sheet.setAttribute("href", "<?=$cssUrl?>");
 		document.getElementsByTagName("head")[0].appendChild(sheet);
 		setTimeout(function(){document.getElementById("pqp-container").style.display = "block"}, 10);
+		if(readCookie('pqp-tab')) {
+			changeTab(readCookie('pqp-tab'));
+		}
+		if(readCookie('pqp-details') === 'false') {
+			toggleDetails();
+		}
 	}
 	
 	
