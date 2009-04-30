@@ -49,9 +49,18 @@ function displayPqp($output, $config) {
 <script type="text/javascript">
 	var PQP_DETAILS = true;
 	var PQP_HEIGHT = "short";
+	
 	jQuery.noConflict();
 	
 	addEvent(window, 'load', loadCSS);
+	
+	jQuery(function() {
+		jQuery('#pqp-console .side td').click(function() {
+			if( jQuery(this).css('opacity') == '0.2' ) { var topac = 1; } else { var topac = 0.2 };
+			jQuery(this).fadeTo(200, topac);
+			jQuery('tr.log-' + this.className.split(' ')[1].substr(1)).toggle();
+		}).css('cursor', 'pointer');
+	});
 	
 	function createCookie(name,value,days) {
 		if (days) {
@@ -137,13 +146,10 @@ function displayPqp($output, $config) {
 		}
 	}
 	
-	
-	//http://www.bigbold.com/snippets/posts/show/2630
 	function addClassName(objElement, strClass, blnMayAlreadyExist){
 		jQuery(objElement).addClass(strClass);
 	}
-
-	//http://www.bigbold.com/snippets/posts/show/2630
+	
 	function removeClassName(objElement, strClass){
 	   jQuery(objElement).removeClass(strClass);
 	}
@@ -196,12 +202,12 @@ function displayPqp($output, $config) {
 <? } else { ?>
 <table class="side" cellspacing="0">
 		<tr>
-			<td class="alt1"><var><?=$output['logs']['logCount']?></var><h4>Logs</h4></td>
-			<td class="alt2"><var><?=$output['logs']['errorCount']?></var> <h4>Errors</h4></td>
+			<td class="alt1 tlog"><var><?=$output['logs']['logCount']?></var><h4>Logs</h4></td>
+			<td class="alt2 terror"><var><?=$output['logs']['errorCount']?></var> <h4>Errors</h4></td>
 		</tr>
 		<tr>
-			<td class="alt3"><var><?=$output['logs']['memoryCount']?></var> <h4>Memory</h4></td>
-			<td class="alt4"><var><?=$output['logs']['speedCount']?></var> <h4>Speed</h4></td>
+			<td class="alt3 tmemory"><var><?=$output['logs']['memoryCount']?></var> <h4>Memory</h4></td>
+			<td class="alt4 tspeed"><var><?=$output['logs']['speedCount']?></var> <h4>Speed</h4></td>
 		</tr>
 		</table>
 		<table class="main" cellspacing="0">
