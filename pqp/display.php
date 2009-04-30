@@ -55,9 +55,10 @@ function displayPqp($output, $config) {
 	
 	jQuery(function() {
 		jQuery('#pqp-console .side td').click(function() {
-			if( jQuery(this).css('opacity') == '0.2' ) { var topac = 1; } else { var topac = 0.2 };
+			var topac = ( jQuery(this).css('opacity') == '0.2' ) ? 1 : 0.2;
 			jQuery(this).fadeTo(200, topac);
 			jQuery('tr.log-' + this.className.split(' ')[1].substr(1)).toggle();
+			createCookie('pqp-' + this.className.split(' ')[1].substr(1), Math.round(topac));
 		}).css('cursor', 'pointer');
 		jQuery('.log-log pre').each(function() {
 			var text = jQuery(this).text(), type = false;
@@ -193,6 +194,12 @@ function displayPqp($output, $config) {
 		} else {
 			toggleDetails(true);
 		}
+		jQuery.each(['log', 'speed', 'error', 'memory'], function() {
+			if( readCookie('pqp-' + this) != null && readCookie('pqp-' + this) == 0 ) {
+				jQuery('#pqp-console .side td.t' + this).click();
+				jQuery('#pqp-console .main tr.log-' + this).hide();
+			}
+		});
 	}
 	
 	function addClassName(objElement, strClass, blnMayAlreadyExist){
