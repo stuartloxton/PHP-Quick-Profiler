@@ -60,7 +60,24 @@ function displayPqp($output, $config) {
 			jQuery(this).fadeTo(200, topac);
 			jQuery('tr.log-' + this.className.split(' ')[1].substr(1)).toggle();
 		}).css('cursor', 'pointer');
+		bindResizer();
 	});
+	
+	function bindResizer() {
+		jQuery('#pQp').resizable({
+			handles: 'n',
+			alsoResize: '#pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files',
+			minHeight: 109,
+			stop: function() {
+				jQuery('#pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files').css('width', 'auto');
+				createCookie('pqp-height', jQuery('#pQp').height());
+			}
+		});
+	}
+	
+	function unbindResizer() {
+		jQuery('#pQp').resizable('destroy');
+	}
 	
 	function createCookie(name,value,days) {
 		if (days) {
@@ -104,16 +121,21 @@ function displayPqp($output, $config) {
 		removeClassName(pQp, 'files');
 	}
 	
-	function toggleDetails(){
+	function toggleDetails( forceOpen ){
 		var container = document.getElementById('pqp-container');
 		
-		if(PQP_DETAILS){
+		if(PQP_DETAILS && !forceOpen){
 			addClassName(container, 'hideDetails', true);
+			jQuery('#pQp').height(76).css('top', 'auto');
+			unbindResizer();
 			PQP_DETAILS = false;
 			createCookie('pqp-details', false);
-		}
-		else{
+		} else{
 			removeClassName(container, 'hideDetails');
+			var xTarg = (readCookie('pqp-height') && readCookie('pqp-height') > 76) ? readCookie('pqp-height') : 109;
+			jQuery('#pQp').css('height', xTarg + 'px' );
+			jQuery('#pqp-console, #pqp-speed, #pqp-queries, #pqp-memory, #pqp-files').height( xTarg - 107);
+			bindResizer();
 			PQP_DETAILS = true;
 			createCookie('pqp-details', true);
 		}
@@ -143,6 +165,8 @@ function displayPqp($output, $config) {
 		}
 		if(readCookie('pqp-details') === 'false') {
 			toggleDetails();
+		} else {
+			toggleDetails(true);
 		}
 	}
 	
@@ -246,8 +270,8 @@ function displayPqp($output, $config) {
 	<table class="side" cellspacing="0">
 		  <tr><td><var><?=$output['speedTotals']['total']?></var><h4>Load Time</h4></td></tr>
 		  <tr><td class="alt"><var><?=$output['speedTotals']['allowed']?></var> <h4>Max Execution Time</h4></td></tr>
-		 </table>
-		<table class="main" cellspacing="0">';
+	</table>
+	<table class="main" cellspacing="0">
 		
 		<? $class = '';
 		foreach($output['logs']['console'] as $log) {
@@ -311,7 +335,7 @@ function displayPqp($output, $config) {
 		  <tr><td><var><?=$output['memoryTotals']['used']?></var><h4>Used Memory</h4></td></tr>
 		  <tr><td class="alt"><var><?=$output['memoryTotals']['total']?></var> <h4>Total Available</h4></td></tr>
 		 </table>
-		<table class="main" cellspacing="0">';
+		<table class="main" cellspacing="0">
 	
 		<?
 		$class = '';
@@ -363,7 +387,6 @@ function displayPqp($output, $config) {
 				Profiler</a></td>
 			<td class="actions">
 				<a href="#" onclick="toggleDetails();return false">Details</a>
-				<a class="heightToggle" href="#" onclick="toggleHeight();return false">Height</a>
 			</td>
 		</tr>
 	</table>

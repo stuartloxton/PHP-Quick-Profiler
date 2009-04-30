@@ -404,3 +404,18 @@
 	background:#ECF488;
 	color:green !important;
 }
+#pQp .ui-resizable-n {
+	height: 13px;
+	position: absolute;
+	top: 0;
+	width: 85%;
+	min-width: 850px;
+}
+
+#pQp .ui-resizable-n:hover {
+	background-color: #333;
+}
+
+#pQp.ui-resizable-resizing .ui-resizable-n {
+	background-color: #333;
+}
