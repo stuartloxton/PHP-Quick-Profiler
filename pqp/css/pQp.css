@@ -419,3 +419,15 @@
 #pQp.ui-resizable-resizing .ui-resizable-n {
 	background-color: #333;
 }
+
+#pQp .openKey {
+	color: #47740D;
+}
+
+#pQp .openKey .key {
+	color: #6AAE12;
+}
+
+#pQp .openKey .val {
+	color: #A5E259;
+}

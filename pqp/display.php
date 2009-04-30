@@ -59,6 +59,31 @@ function displayPqp($output, $config) {
 			jQuery(this).fadeTo(200, topac);
 			jQuery('tr.log-' + this.className.split(' ')[1].substr(1)).toggle();
 		}).css('cursor', 'pointer');
+		jQuery('.log-log pre').each(function() {
+			var text = jQuery(this).text(), type = false;
+			if( type = text.match( /^([^\n]*)\n\(/ ) ) {
+				text = text.replace(/^[^\n]*\n/, '');
+				jQuery(this).before('<a href="#" class="openKey">' + type[1] + '</a>');
+				
+				matches = text.match( /\[([^\]]+)\]\s=>\s([^\n]+)(\n\s*\[([^\]]+)\]\s=>\s([^\n]+))?/ );
+				
+				for(var i = 1; i <= 2; i++) {
+					if( matches[0] ) {
+						matches.shift();
+						jQuery(this).prev().append(' <span class="key">' + matches[0] + '</span>');
+						matches.shift();
+						jQuery(this).prev().append('=<span class="val">' + matches[0] + '</span>');
+						matches.shift();
+					}
+				}
+				
+				jQuery(this).text( text ).hide();
+			}
+		});
+		jQuery('.openKey').live('click', function() {
+			jQuery(this).next().slideToggle();
+			return false;
+		});
 		bindResizer();
 	});
 	
