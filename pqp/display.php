@@ -25,9 +25,31 @@ function displayPqp($output, $config) {
 	$speedTotal = $output['speedTotals']['total'];	
 	?>
 	
+	
+	
+<script type="text/javascript" charset="utf-8">
+	files = []
+	if(typeof(jQuery) != 'function') {
+		files.push('<?=$config?>js/jquery-1.3.2.min.js');
+		files.push('<?=$config?>js/jquery-ui-1.7.1.custom.min.js');
+	} else if(typeof(jQuery.fn.resizable) != 'function') {
+		files.push('<?=$config?>js/jquery-ui-1.7.1.custom.min.js');
+	}
+	
+	if( files.length ) {
+		var head = document.getElementsByTagName("head")[0];
+		for(filei = 0; filei < files.length; filei++) {
+			c = document.createElement('script');
+			c.type = 'text/javascript';
+			c.src = files[filei];
+			head.appendChild(c);
+		}
+	}
+</script>
 <script type="text/javascript">
 	var PQP_DETAILS = true;
 	var PQP_HEIGHT = "short";
+	jQuery.noConflict();
 	
 	addEvent(window, 'load', loadCSS);
 	
@@ -118,38 +140,12 @@ function displayPqp($output, $config) {
 	
 	//http://www.bigbold.com/snippets/posts/show/2630
 	function addClassName(objElement, strClass, blnMayAlreadyExist){
-	   if ( objElement.className ){
-	      var arrList = objElement.className.split(' ');
-	      if ( blnMayAlreadyExist ){
-	         var strClassUpper = strClass.toUpperCase();
-	         for ( var i = 0; i < arrList.length; i++ ){
-	            if ( arrList[i].toUpperCase() == strClassUpper ){
-	               arrList.splice(i, 1);
-	               i--;
-	             }
-	           }
-	      }
-	      arrList[arrList.length] = strClass;
-	      objElement.className = arrList.join(' ');
-	   }
-	   else{  
-	      objElement.className = strClass;
-	      }
+		jQuery(objElement).addClass(strClass);
 	}
 
 	//http://www.bigbold.com/snippets/posts/show/2630
 	function removeClassName(objElement, strClass){
-	   if ( objElement.className ){
-	      var arrList = objElement.className.split(' ');
-	      var strClassUpper = strClass.toUpperCase();
-	      for ( var i = 0; i < arrList.length; i++ ){
-	         if ( arrList[i].toUpperCase() == strClassUpper ){
-	            arrList.splice(i, 1);
-	            i--;
-	         }
-	      }
-	      objElement.className = arrList.join(' ');
-	   }
+	   jQuery(objElement).removeClass(strClass);
 	}
 
 	//http://ejohn.org/projects/flexible-javascript-events/
