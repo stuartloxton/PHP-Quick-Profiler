@@ -48,7 +48,6 @@ function displayPqp($output, $config) {
 </script>
 <script type="text/javascript">
 	var PQP_DETAILS = true;
-	var PQP_HEIGHT = "short";
 	
 	jQuery.noConflict();
 	
@@ -109,6 +108,7 @@ function displayPqp($output, $config) {
 		var pQp = document.getElementById('pQp');
 		hideAllTabs();
 		addClassName(pQp, tab, true);
+		if( !PQP_DETAILS ) toggleDetails();
 		createCookie('pqp-tab', tab);
 	}
 	
