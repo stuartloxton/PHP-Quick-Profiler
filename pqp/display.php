@@ -85,6 +85,17 @@ function displayPqp($output, $config) {
 			jQuery(this).next().slideToggle();
 			return false;
 		});
+		jQuery('#minimise').click(function() {
+			if( !jQuery('#pQp').data('closed') ) {
+				createCookie('pqp-height', jQuery('#pQp').height());
+				jQuery('#pQp').height(0);
+				unbindResizer();
+				jQuery('#pQp').data('closed', true);
+				createCookie('pqp-closed', '1');
+				jQuery('#pqp-container').click( function() { toggleDetails(true); } );
+			}
+			return false;
+		});
 		bindResizer();
 	});
 	
@@ -157,6 +168,7 @@ function displayPqp($output, $config) {
 			PQP_DETAILS = false;
 			createCookie('pqp-details', false);
 		} else{
+			console.log( 'opening' );
 			removeClassName(container, 'hideDetails');
 			var xTarg = (readCookie('pqp-height') && readCookie('pqp-height') > 76) ? readCookie('pqp-height') : 109;
 			jQuery('#pQp').css('height', xTarg + 'px' );
@@ -164,6 +176,8 @@ function displayPqp($output, $config) {
 			bindResizer();
 			PQP_DETAILS = true;
 			createCookie('pqp-details', true);
+			createCookie('pqp-closed', '0');
+			jQuery('#pQp').data('closed', false);
 		}
 	}
 	function toggleHeight(){
@@ -186,20 +200,24 @@ function displayPqp($output, $config) {
 		sheet.setAttribute("href", "<?=$cssUrl?>");
 		document.getElementsByTagName("head")[0].appendChild(sheet);
 		setTimeout(function(){document.getElementById("pqp-container").style.display = "block"}, 10);
-		if(readCookie('pqp-tab')) {
-			changeTab(readCookie('pqp-tab'));
-		}
-		if(readCookie('pqp-details') === 'false') {
-			toggleDetails();
-		} else {
-			toggleDetails(true);
-		}
 		jQuery.each(['log', 'speed', 'error', 'memory'], function() {
 			if( readCookie('pqp-' + this) != null && readCookie('pqp-' + this) == 0 ) {
 				jQuery('#pqp-console .side td.t' + this).click();
 				jQuery('#pqp-console .main tr.log-' + this).hide();
 			}
 		});
+		if(readCookie('pqp-tab')) {
+			changeTab(readCookie('pqp-tab'));
+		}
+		if( readCookie('pqp-closed') === '1') {
+			jQuery('#minimise').click();
+		} else {
+			if(readCookie('pqp-details') === 'false') {
+				toggleDetails();
+			} else {
+				toggleDetails(true);
+			}
+		}
 	}
 	
 	function addClassName(objElement, strClass, blnMayAlreadyExist){
@@ -413,10 +431,12 @@ function displayPqp($output, $config) {
 	<table id="pqp-footer" cellspacing="0">
 		<tr>
 			<td class="credit">
+				<a href="#" id="minimise">&lt;</a>
 				<a href="http://particletree.com" target="_blank">
 				<strong>PHP</strong> 
-				<b class="green">Q</b><b class="blue">u</b><b class="purple">i</b><b class="orange">c</b><b class="red">k</b>
-				Profiler</a></td>
+					<b class="green">Q</b><b class="blue">u</b><b class="purple">i</b><b class="orange">c</b><b class="red">k</b>
+				Profiler</a>
+			</td>
 			<td class="actions">
 				<a href="#" onclick="toggleDetails();return false">Details</a>
 			</td>
